@@ -1,16 +1,30 @@
 package com.globalit.account;
 
+import com.globalit.domain.Account;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import javax.validation.Valid;
 
 @Controller
+@RequiredArgsConstructor
 public class AccountController {
+
+  private final SignUpFormValidator signUpFormValidator;
+  private final AccountRepository accountRepository;
+
+  @InitBinder("signUpForm")
+  public void initBinder(WebDataBinder webDataBinder){
+    // webDataBinder 에 validator 추가하기
+    webDataBinder.addValidators(signUpFormValidator);
+  }
 
   // localhost:8080/sign-up 을 브라우저의 주소표시줄에
   // 입력했을 때 자동으로 호출되는 메소드
@@ -47,6 +61,19 @@ public class AccountController {
       // sign-up 페이지를 다시 보여줌
       return "account/sign-up";
     }
+
+    // 회원가입 폼 submit 처리
+    Account account = Account.builder()
+                             .email(signUpForm.getEmail())
+                             .nickname(signUpForm.getNickname())
+                             .password(signUpForm.getPassword()) // <-- encoding 해야 함
+                             .studyCreateByWeb(true)
+                             .studyEnrollmentResultByWeb(true)
+                             .studyUpdatedByWeb(true)
+                             .build();
+
+    Account newAccount = accountRepository.save(account);
+
 
     // 회원가입 처리 페이지로 이동
     return "redirect:/";
