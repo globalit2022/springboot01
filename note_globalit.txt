@@ -221,6 +221,46 @@ singUpForm(Model model) 메소드에서
 파라미터로 전달된 Model 객체 사용하기
 
 
+20221221
+
+
+AccountController
+@PostMapping("/sign-up")
+  public String signUpSubmit(@Valid @ModelAttribute SignUpForm signUpForm){ }
+
+import javax.validation.Valid;
+  ㄴ  자동으로 인식 안 되서 add maven dependency 진행함
+
+@Valid - 객체의 제약조건을 검증함
+
+@ModelAttribute - 파라미터로 들어오는 객체를 mapping 해 줌
+                  파라미터로 들어오는 객체를 Getter, Setter, 생성자를
+                  통해서 주입하기(injection) 위해서 사용함
+                  일반 변수로는 전달이 안 되고 Model 객체를 통해서 전달해야 함
+                  생략할 수 있음
+
+@Component  <-- 개발자가 작성한 Class 를 Bean 으로 등록함
+                Bean : Spring Framework 가 자동으로 생성한 객체
+public class SignUpFormValidator implements Validator {}
+
+@Bean  <-- 외부 라이브러리(클래스) 를 Bean 으로 등록함
+
+(Bean 으로 등록한다는 것은 SpringFramework 가 자동으로 객체를 생성해서
+ Spring Container (Spring 이 관리하는 메모리 공간) 에 올린다는 것)
+
+@RequiredArgsConstructor
+ private 이면서 final 인 멤버변수를
+ 초기화하는 생성자를 추가해 줌
+ private 이라고 해도 final 이 아니면
+ 이를 초기화하는 생성자는 추가하지 않음
+
+
+@Transactional(readOnly=true)
+트랜잭션을 읽기 전용 모드로 설정함
+
+
+
+
 
 
 

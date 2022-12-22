@@ -2,11 +2,18 @@ package com.globalit.account;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+
+import javax.validation.Valid;
 
 @Controller
 public class AccountController {
 
+  // localhost:8080/sign-up 을 브라우저의 주소표시줄에
+  // 입력했을 때 자동으로 호출되는 메소드
   @GetMapping("/sign-up")
   public String signUpForm(Model model){
     // account/sign-up 으로 이동할 때,
@@ -28,6 +35,21 @@ public class AccountController {
     // 에서 .... 사용자가 회원 가입하면서 화면에 입력하는 내용들이
     // signUpForm 변수(이름)(SignUpForm 객체) 의 멤버변수
     // nickname, email, password 에 저장됨
+  }
+
+  // 회원가입 페이지에서 submit 버튼 눌렀을 때
+  // 자동으로 호출되는 메소드
+  @PostMapping("/sign-up")
+  // public String signUpSubmit(@Valid @ModelAttribute SignUpForm signUpForm){
+  public String signUpSubmit(@Valid SignUpForm signUpForm, Errors errors){
+    if(errors.hasErrors()){
+      // 에러가 있으면 다음 페이지로 넘어가지 않고
+      // sign-up 페이지를 다시 보여줌
+      return "account/sign-up";
+    }
+
+    // 회원가입 처리 페이지로 이동
+    return "redirect:/";
   }
 
 
